@@ -1,4 +1,4 @@
-package com.duolingo.calculatepijava;
+package com.calculate.pi;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

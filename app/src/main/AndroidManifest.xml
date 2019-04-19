@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.duolingo.calculatepijava" >
+    package="com.calculate.pi" >
 
     <application
         android:allowBackup="true"
@@ -9,13 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-        <activity android:name=".MainActivity" >
+        <activity android:name="com.calculate.pi.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name="com.calculate.pi.CalculatePiService"/>
     </application>
 
 </manifest>
