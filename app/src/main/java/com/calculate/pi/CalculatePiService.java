@@ -11,10 +11,6 @@ import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.calculate.pi.MainActivity.ACTION_UPDATE_PI;
-import static com.calculate.pi.MainActivity.PI;
-import static com.calculate.pi.MainActivity.TIME;
-
 public class CalculatePiService extends Service {
     public static final String USER_ACTION = "user_action";
 
@@ -56,15 +52,15 @@ public class CalculatePiService extends Service {
     public int onStartCommand(final Intent intent, int flags, int startId) {
         if (intent != null) {
             switch (intent.getStringExtra(USER_ACTION)) {
-                case MainActivity.START:
+                case MainPresenter.START:
                     startTimer();
                     break;
-                case MainActivity.STOP:
+                case MainPresenter.STOP:
                     resetCalculateVariables();
                     mTimeEscaped = 0;
                     destroyTimer();
                     break;
-                case MainActivity.PAUSE:
+                case MainPresenter.PAUSE:
                     destroyTimer();
                     mTimeEscaped = SystemClock.elapsedRealtime() - mBaseTime;
                     break;
@@ -84,7 +80,7 @@ public class CalculatePiService extends Service {
      * Start to calculate the PI, the calculate frequency is 1 second, the escaped time will also be
      * calculated.
      */
-    public void startTimer() {
+    private void startTimer() {
         mBaseTime = SystemClock.elapsedRealtime() - mTimeEscaped;
         mTimerTask = new TimerTask() {
 
@@ -92,14 +88,13 @@ public class CalculatePiService extends Service {
             public void run() {
                 int time = (int) ((SystemClock.elapsedRealtime() - CalculatePiService.this.mBaseTime) / 1000);
                 final DecimalFormat format = new DecimalFormat("00");
-                final String timeFormat = new StringBuilder()
-                        .append(format.format(time / 3600)).append(":")
-                        .append(format.format(time % 3600 / 60)).append(":")
-                        .append(format.format(time % 60)).toString();
+                final String timeFormat = format.format(time / 3600) + ":" +
+                        format.format(time % 3600 / 60) + ":" +
+                        format.format(time % 60);
 
-                Intent broadcastIntent = new Intent(ACTION_UPDATE_PI);
-                broadcastIntent.putExtra(PI, calculatePi());
-                broadcastIntent.putExtra(TIME, timeFormat);
+                Intent broadcastIntent = new Intent(MainPresenter.ACTION_UPDATE_PI);
+                broadcastIntent.putExtra(MainPresenter.PI, calculatePi());
+                broadcastIntent.putExtra(MainPresenter.TIME, timeFormat);
                 sendBroadcast(broadcastIntent);
             }
         };
@@ -110,7 +105,7 @@ public class CalculatePiService extends Service {
     /**
      * Destroy the timer and timer task
      */
-    public void destroyTimer() {
+    private void destroyTimer() {
         if (mTimer != null) {
             mTimer.cancel();
             mTimer = null;
