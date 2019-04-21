@@ -31,19 +31,24 @@ class CalculatePiService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null) {
             when (intent.getStringExtra(USER_ACTION)) {
+                // Start to calculate PI
                 MainPresenter.START -> startTimer()
+
+                // Stop to calculate PI
                 MainPresenter.STOP -> {
                     resetCalculateVariables()
                     mTimeEscaped = 0
                     destroyTimer()
                 }
+
+                // Pause to calculate PI
                 MainPresenter.PAUSE -> {
                     destroyTimer()
                     mTimeEscaped = SystemClock.elapsedRealtime() - mBaseTime
                 }
             }
         }
-        return START_STICKY
+        return START_REDELIVER_INTENT
     }
 
     override fun onDestroy() {
