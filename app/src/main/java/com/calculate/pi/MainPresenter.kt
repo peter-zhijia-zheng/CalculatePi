@@ -11,7 +11,7 @@ internal class MainPresenter(private val mContext: Context, private val mView: I
     private val mReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
             if (intent != null && ACTION_UPDATE_PI == intent.action) {
-                mView.updatePiAndTime(intent.getDoubleExtra(PI, 0.0),
+                mView.updatePiAndTime(intent.getStringExtra(PI),
                         intent.getStringExtra(TIME))
             }
         }
@@ -23,7 +23,7 @@ internal class MainPresenter(private val mContext: Context, private val mView: I
     }
 
     /**
-     * Calculate Pi according to user's action, the calculation is computing intensive, so we start
+     * Calculate π according to user's action, the calculation is computing intensive, so we start
      * a service to do this.
      * @param action The user actions: START, PAUSE and STOP
      */

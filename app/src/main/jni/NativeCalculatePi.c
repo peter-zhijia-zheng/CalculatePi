@@ -3,54 +3,37 @@
 //
 
 #include <jni.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 #include "com_calculate_pi_NativeCalculatePi.h"
 
-// Each time add INCREMENT count point to increase the accuracy, we can adjust this value to make
-// it faster(bigger) or slower(smaller) to increase the accuracy.
-const int INCREMENT = 100000;
-long totalPointCount = 0;
-long pointCountInCircle = 0;
+// π = 3 + 4/(2*3*4) - 4/(4*5*6) + 4/(6*7*8) - 4/(8*9*10) + 4/(10*11*12) - (4/(12*13*14) ...
+double i = 2.0;
+double pi = 3.0;
+double flag = 1.0;
 
 /*
  * Class:     com_calculate_pi_NativeCalculatePi
  * Method:    calculatePi
-   use Monte Carlo method to calculate PI:
-   http://www.eveandersson.com/pi/monte-carlo-circle
-   the points will have a incremental increase so that
-   calculates pi with increasing accuracy over time.
+   use Nilakantha method to calculate π
  * Signature: ()D
  */
 JNIEXPORT jdouble JNICALL Java_com_calculate_pi_CalculatePiService_calculatePi
   (JNIEnv *env, jclass jclass) {
-        totalPointCount += INCREMENT;
-        double x, y;
-        double pi;
-        srand((unsigned)time(NULL));
-        for (int i = 0; i < INCREMENT; i++) {
-              // A random number from 0 to 1
-              x = rand() % 1001 * 0.001;
-              y = rand() % 1001 * 0.001;
-              if (x * x + y * y < 1) {
-                  pointCountInCircle++;
-              }
+        for (int count = 0; count < 100; count++) {
+            pi += flag * 4.0 / (i * (i + 1) * (i + 2));
+            i = i + 2;
+            flag = -flag;
         }
-        pi = 4.0 * pointCountInCircle / (double)totalPointCount;
-
-        printf("CalculatePi pointCountInCircle:%ld totalPointCount:%ld/n", pointCountInCircle
-              , totalPointCount);
         return pi;
   }
 
 /*
  * Class:     com_calculate_pi_NativeCalculatePi
- * Method:    initCalculate
+ * Method:    resetCalculateVariables
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_com_calculate_pi_CalculatePiService_resetCalculateVariables
   (JNIEnv *env, jclass jclass) {
-        totalPointCount = 0;
-        pointCountInCircle = 0;
+        i = 2.0;
+        pi = 3.0;
+        flag = 1.0;
   }

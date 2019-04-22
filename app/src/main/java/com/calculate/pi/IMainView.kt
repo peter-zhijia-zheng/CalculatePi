@@ -5,7 +5,7 @@ import android.os.Bundle
 internal interface IMainView {
     fun initView()
 
-    fun updatePiAndTime(pi: Double, time: String)
+    fun updatePiAndTime(pi: String, time: String)
 
     fun startCalculation()
 

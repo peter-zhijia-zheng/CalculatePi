@@ -2,7 +2,6 @@ package com.calculate.pi
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -42,7 +41,6 @@ class MainActivity : AppCompatActivity(), IMainView {
     }
 
     override fun onDestroy() {
-        Log.d(TAG, "activity onDestroy")
         mPresenter.destroy()
         super.onDestroy()
     }
@@ -58,16 +56,19 @@ class MainActivity : AppCompatActivity(), IMainView {
             R.id.btn_start_or_pause -> {
                 when (btnStartOrPause.text.toString()) {
                     MainPresenter.START, MainPresenter.CONTINUE ->
+
                         // User has pressed the Start/Continue button, need to start/continue the
                         // calculation of PI.
                         mPresenter.takeAction(MainPresenter.START)
                     MainPresenter.PAUSE ->
+
                         // User has pressed the Pause button, need to pause the calculation of PI.
                         mPresenter.takeAction(MainPresenter.PAUSE)
                 }
                 btnStop.isEnabled = true
             }
             R.id.btn_stop ->
+
                 // User has pressed stop button, so reset the environment.
                 mPresenter.takeAction(MainPresenter.STOP)
         }
@@ -75,10 +76,11 @@ class MainActivity : AppCompatActivity(), IMainView {
 
     override fun initView() {
         btnStartOrPause.text = MainPresenter.START
+        btnStop.text = MainPresenter.STOP
     }
 
-    override fun updatePiAndTime(pi: Double, time: String) {
-        tvPi.text = "PI:$pi"
+    override fun updatePiAndTime(pi: String, time: String) {
+        tvPi.text = pi
         tvTimeElapsed.text = time
     }
 
@@ -114,13 +116,12 @@ class MainActivity : AppCompatActivity(), IMainView {
     override fun stopCalculation() {
         btnStartOrPause.text = MainPresenter.START
         btnStop.isEnabled = false
-        tvPi.text = "PI:0.0"
+        tvPi.text = "π = 0.0"
         tvTimeElapsed.text = "00:00:00"
+        mPresenter.stopCalculateService()
     }
 
     companion object {
-
-        const val TAG = "CalculatePi"
         private const val KEY_START_OR_PAUSE = "start_or_pause"
         private const val KEY_TEXT_PI = "text_pi"
         private const val KEY_TEXT_TIME_ESCAPED = "text_time_escaped"

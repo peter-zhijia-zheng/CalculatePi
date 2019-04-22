@@ -5,8 +5,6 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.os.SystemClock
-import android.util.Log
-import java.text.DecimalFormat
 import java.util.*
 
 class CalculatePiService : Service() {
@@ -15,6 +13,9 @@ class CalculatePiService : Service() {
     private var mTimerTask: TimerTask? = null
     private var mBaseTime: Long = 0
     private var mTimeEscaped: Long = 0
+
+    // hh : mm : ss
+    private val FORMAT_DURATION_H_M_S = "%02d:%02d:%02d"
 
     override fun onCreate() {
         super.onCreate()
@@ -43,8 +44,8 @@ class CalculatePiService : Service() {
 
                 // Pause to calculate PI
                 MainPresenter.PAUSE -> {
-                    destroyTimer()
                     mTimeEscaped = SystemClock.elapsedRealtime() - mBaseTime
+                    destroyTimer()
                 }
             }
         }
@@ -53,7 +54,6 @@ class CalculatePiService : Service() {
 
     override fun onDestroy() {
         destroyTimer()
-        Log.d(MainActivity.TAG, "service onDestroy")
         super.onDestroy()
     }
 
@@ -67,13 +67,11 @@ class CalculatePiService : Service() {
 
             override fun run() {
                 val time = ((SystemClock.elapsedRealtime() - this@CalculatePiService.mBaseTime) / 1000).toInt()
-                val format = DecimalFormat("00")
-                val timeFormat = format.format((time / 3600).toLong()) + ":" +
-                        format.format((time % 3600 / 60).toLong()) + ":" +
-                        format.format((time % 60).toLong())
+                val timeFormat = String.format(FORMAT_DURATION_H_M_S, time / 3600, time % 3600 / 60,
+                        time % 3600 % 60)
 
                 val broadcastIntent = Intent(MainPresenter.ACTION_UPDATE_PI)
-                broadcastIntent.putExtra(MainPresenter.PI, calculatePi())
+                broadcastIntent.putExtra(MainPresenter.PI, "π = " + calculatePi())
                 broadcastIntent.putExtra(MainPresenter.TIME, timeFormat)
                 sendBroadcast(broadcastIntent)
             }
@@ -98,12 +96,12 @@ class CalculatePiService : Service() {
 
     /**
      * A native method which will calculate the PI more efficient than java method.
-     * @return The current calculated value of PI
+     * @return The current calculated value of π
      */
     private external fun calculatePi(): Double
 
     /**
-     * A native method which will reset the variables value which used when calculating the PI
+     * A native method which will reset the variables value which used when calculating the π
      */
     private external fun resetCalculateVariables()
 
