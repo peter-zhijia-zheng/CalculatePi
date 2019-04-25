@@ -3,7 +3,7 @@ package com.calculate.pi
 import android.os.Bundle
 
 internal interface IMainView {
-    fun initView()
+    fun initViews()
 
     fun updatePiAndTime(pi: String, time: String)
 

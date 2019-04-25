@@ -19,7 +19,7 @@ internal class MainPresenter(private val mContext: Context, private val mView: I
 
     fun init() {
         mContext.registerReceiver(mReceiver, IntentFilter(ACTION_UPDATE_PI))
-        mView.initView()
+        mView.initViews()
     }
 
     /**

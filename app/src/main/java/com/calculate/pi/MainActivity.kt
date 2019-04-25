@@ -74,9 +74,12 @@ class MainActivity : AppCompatActivity(), IMainView {
         }
     }
 
-    override fun initView() {
+    override fun initViews() {
         btnStartOrPause.text = MainPresenter.START
         btnStop.text = MainPresenter.STOP
+        btnStop.isEnabled = false
+        tvPi.text = "π = 0.0"
+        tvTimeElapsed.text = "00:00:00"
     }
 
     override fun updatePiAndTime(pi: String, time: String) {
@@ -114,10 +117,7 @@ class MainActivity : AppCompatActivity(), IMainView {
     }
 
     override fun stopCalculation() {
-        btnStartOrPause.text = MainPresenter.START
-        btnStop.isEnabled = false
-        tvPi.text = "π = 0.0"
-        tvTimeElapsed.text = "00:00:00"
+        initViews()
         mPresenter.stopCalculateService()
     }
 

@@ -36,7 +36,7 @@ class CalculatePiUnitTest {
     @Test fun `When started, start to init`() {
         presenter.init()
 
-        verify(view).initView()
+        verify(view).initViews()
     }
 
     @Test fun `When take start action, start to calculate PI`() {
